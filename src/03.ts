@@ -3,17 +3,8 @@ import { input } from "./03-input";
 
 export function doIt(progress: (...params: any[]) => void) {
   const parsed = input.split(`\n`).map((line) => line.split(``).map(Number));
-  const first = parsed.reduce((acc, curr) => {
-    const first = Math.max(...curr.slice(0, curr.length - 1));
-    const firstIndex = curr.indexOf(first);
-    const second = Math.max(...curr.slice(firstIndex + 1));
-    return acc + first * 10 + second;
-  }, 0);
-  const second = parsed.reduce((acc, curr) => {
-    const max = getMax(curr, 12);
-    console.log(max);
-    return acc + max;
-  }, 0);
+  const first = parsed.reduce((acc, curr) => acc + getMax(curr, 2), 0);
+  const second = parsed.reduce((acc, curr) => acc + getMax(curr, 12), 0);
   console.log(first, second);
 }
 

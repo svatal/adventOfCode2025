@@ -8,7 +8,9 @@ export function doIt(progress: (...params: any[]) => void) {
     return { start, end };
   });
   const ids = idsS.split(`\n`).map((n) => +n);
+
   const first = ids.filter((id) => ranges.some((range) => id >= range.start && id <= range.end)).length;
+
   let uniqueRanges: { start: number; end: number }[] = [];
   for (let { start, end } of ranges) {
     const startConflict = uniqueRanges.find((r) => r.start <= start && r.end >= start);
@@ -22,10 +24,11 @@ export function doIt(progress: (...params: any[]) => void) {
     if (start > end) {
       continue;
     }
-    const insideConflict = uniqueRanges.filter((r) => r.start >= start && r.end <= end);
-    uniqueRanges = uniqueRanges.filter((r) => !insideConflict.includes(r));
+    const insideConflicts = uniqueRanges.filter((r) => r.start >= start && r.end <= end);
+    uniqueRanges = uniqueRanges.filter((r) => !insideConflicts.includes(r));
     uniqueRanges.push({ start, end });
   }
   const second = uniqueRanges.reduce((acc, curr) => acc + (curr.end - curr.start + 1), 0);
+
   console.log(first, second);
 }

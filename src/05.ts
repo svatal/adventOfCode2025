@@ -13,19 +13,9 @@ export function doIt(progress: (...params: any[]) => void) {
 
   let uniqueRanges: { start: number; end: number }[] = [];
   for (let { start, end } of ranges) {
-    const startConflict = uniqueRanges.find((r) => r.start <= start && r.end >= start);
-    if (startConflict) {
-      start = startConflict.end + 1;
-    }
-    const endConflict = uniqueRanges.find((r) => r.start <= end && r.end >= end);
-    if (endConflict) {
-      end = endConflict.start - 1;
-    }
-    if (start > end) {
-      continue;
-    }
-    const insideConflicts = uniqueRanges.filter((r) => r.start >= start && r.end <= end);
-    uniqueRanges = uniqueRanges.filter((r) => !insideConflicts.includes(r));
+    start = uniqueRanges.find((r) => r.start <= start && r.end >= start)?.start ?? start;
+    end = uniqueRanges.find((r) => r.start <= end && r.end >= end)?.end ?? end;
+    uniqueRanges = uniqueRanges.filter((r) => r.start < start || r.end > end);
     uniqueRanges.push({ start, end });
   }
   const second = uniqueRanges.reduce((acc, curr) => acc + (curr.end - curr.start + 1), 0);

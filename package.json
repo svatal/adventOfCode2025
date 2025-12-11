@@ -10,6 +10,9 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "yalps": "*"
+  },
   "devDependencies": {
     "@types/node": "*",
     "nodemon": "*",

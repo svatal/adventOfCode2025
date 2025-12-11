@@ -1,5 +1,6 @@
 // import { testInput as input } from "./10-input";
 import { input } from "./10-input";
+import { solve, equalTo } from "yalps";
 
 export function doIt(progress: (...params: any[]) => void) {
   const parsed = input.split(`\n`).map((line) => {
@@ -11,7 +12,17 @@ export function doIt(progress: (...params: any[]) => void) {
     };
   });
   const first = parsed.map(({ lights, buttons }) => getStepsForLights(lights, buttons)).reduce((acc, curr) => acc + curr, 0);
-  const second = parsed.length;
+
+  const s = parsed.map(({ buttons, joltage }) => {
+    return solve({
+      objective: "click",
+      direction: "minimize",
+      constraints: joltage.map((joltage, jIdx) => [`joiltage${jIdx}`, equalTo(joltage)]),
+      variables: buttons.map((button, bIdx) => [`button${bIdx}`, [["click", 1] as const, ...button.map((idx) => [`joiltage${idx}`, 1] as const)]]),
+      integers: true,
+    }).result;
+  });
+  const second = s.reduce((acc, curr) => acc + curr, 0);
   console.log(first, second);
 }
 
